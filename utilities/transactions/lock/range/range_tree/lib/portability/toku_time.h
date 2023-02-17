@@ -137,6 +137,10 @@ static inline tokutime_t toku_time_now(void) {
   uint64_t cycles;
   asm volatile("rdcycle %0" : "=r"(cycles));
   return cycles;
+#elif defined(__loongarch64)
+  uint64_t cycles, count_id;
+  asm volatile("rdtime.d %0, %1": "=r"(cycles), "=r"(count_id));
+  return cycles;
 #else
 #error No timer implementation for this platform
 #endif
